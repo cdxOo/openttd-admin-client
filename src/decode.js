@@ -5,9 +5,7 @@ var binary = require('binary'),
 module.exports = (packet) => {
     var decoder = binary.parse(packet),
         fields = undefined;
-    var sigma = 0,
-        packetLength = packet.length;
-
+    
     (
         decoder
         .word16le('length')

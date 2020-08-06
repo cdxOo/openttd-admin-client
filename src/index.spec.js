@@ -12,26 +12,25 @@ var result = (async () => {
     });
 
     await client.connect();
-    await client.auth({
+    var response = await client.auth({
         user: 'AdminUser',
         password: 'supersecret'
     });
-    console.log(await client.read(2));
+    console.log(response);
+
+    var lines;
+
+    lines = await client.rcon.content.update();
+    console.log(lines);
+
+    lines = await client.rcon.content.state({ filter: 'universal' });
+    console.log(lines);
     
-    await client.rcon('content state "a"');
-    var packet = await client.read();
-    console.log(packet.output);
-    // FIXME: when not applying eny filter
-    // the list gets really long and somehow, sometimes we
-    // recieve mangled buffers so the rcon end never gets parsed
-    // (see ServerNetworkAdminSocketHandler::SendConsole
-    // in network_admin.cpp)
-    // for this reason we check if packet.output exists in addition
-    // to the if the type is not rcon end
-    while (packet.type !== 125) {
-        packet = await client.read();
-        console.log(packet.output);
-    }
+    lines = await client.rcon.content.select({ id: 10548386 });
+    console.log(lines);
+    
+    lines = await client.rcon.content.download();
+    console.log(lines);
     //console.log(await client.read());
     //console.log(client.queue());
 
