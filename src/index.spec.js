@@ -31,6 +31,33 @@ var result = (async () => {
     
     lines = await client.rcon.content.download();
     console.log(lines);
+
+    lines = await client.rcon.clients();
+    console.log(lines);
+    
+    lines = await client.rcon.companies();
+    console.log(lines);
+    
+    lines = await client.rcon.echo({ text: "foo bar baz" });
+    console.log(lines);
+    
+    lines = await client.rcon.listPatches();
+    console.log(lines);
+    
+    lines = await client.rcon.dir();
+    console.log(lines);
+
+    lines = await client.rcon.pwd();
+    console.log(lines);
+    
+    lines = await client.rcon.serverInfo();
+    console.log(lines);
+    
+    lines = await client.rcon.status();
+    console.log(lines);
+
+    lines = await client.rcon.startAi({ ai: 3 });
+    console.log(lines);
     //console.log(await client.read());
     //console.log(client.queue());
 
