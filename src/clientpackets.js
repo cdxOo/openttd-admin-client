@@ -1,5 +1,4 @@
 'use strict';
-
 var Buffers = require('buffers'),
     put = require('put'),
     zero = require('./zerobuf'),

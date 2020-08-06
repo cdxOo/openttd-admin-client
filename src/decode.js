@@ -5,6 +5,8 @@ var binary = require('binary'),
 module.exports = (packet) => {
     var decoder = binary.parse(packet),
         fields = undefined;
+    var sigma = 0,
+        packetLength = packet.length;
 
     (
         decoder
@@ -60,5 +62,31 @@ var payloadDecoders = {
                 fields.map.name = fields.map.name.toString();
             })
         )
-    }
+    },
+
+    // new game
+    /*[105]: ({ decoder }) => (
+        decoder
+        
+    ),*/
+
+    // rcon response
+    [120]: ({ decoder }) => (
+        decoder
+        .word16le('color')
+        .scan('output', zero())
+        .tap((fields) => {
+            fields.output = fields.output.toString();
+        })
+    ),
+
+    // rcon response end
+    [125]: ({ decoder }) => (
+        decoder
+        .scan('command', zero())
+        .tap((fields) => {
+            fields.command = fields.command.toString();
+        })
+    ),
+
 }
