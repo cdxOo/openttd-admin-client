@@ -13,8 +13,11 @@ var Client = ({
 }) => {
     var client = {},
         socket,
+        lastChunkOverflow, // FIXME: because reasons
         queue = [],
         log = Logger(debug);
+
+    client.queue = () => ([ ...queue ]);
 
     client.connect = async () => {
         if (!socket) {
@@ -22,9 +25,14 @@ var Client = ({
             socket = new PromiseSocket();
             
             socket.stream.on("data", (chunk) => {
+                var { packets, overflow } = splitChunk({
+                    chunk,
+                    lastChunkOverflow
+                });
+                lastChunkOverflow = overflow;
                 queue = [
                     ...queue,
-                    ...splitChunk(chunk).map(decode)
+                    ...packets.map(decode)
                 ];
             });
 
@@ -50,7 +58,12 @@ var Client = ({
             }
             packets.push(packet);
         }
-        return packets;
+
+        return (
+            count === 1
+            ? packets[0] 
+            : packets
+        );
     }
 
     client.auth = async ({ user, password }) => {

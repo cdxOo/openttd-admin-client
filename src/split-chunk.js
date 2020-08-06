@@ -1,5 +1,14 @@
 'use strict';
-module.exports = (chunk) => {
+var Buffers = require('buffers');
+
+module.exports = ({ chunk, lastChunkOverflow }) => {
+    if (lastChunkOverflow) {
+        chunk = Buffers([
+            lastChunkOverflow,
+            chunk
+        ]).toBuffer()
+    }
+
     var packets = [],
         packetLength = chunk.readUInt16LE(0),
         offset = 0 ;
@@ -15,7 +24,16 @@ module.exports = (chunk) => {
             packetLength = 1; // to make sure while condition is broken
         }
         offset = nextOffset;
+        //console.log("offset", offset, packetLength, chunk.length);
     }
 
-    return packets;
+    var overflow;
+    if (offset < chunk.length) {
+        overflow = chunk.slice(offset, chunk.length);
+    }
+
+    return ({
+        packets,
+        overflow
+    });
 }
