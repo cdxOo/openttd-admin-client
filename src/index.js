@@ -1,5 +1,6 @@
 'use strict';
-var Core = require('./core');
+var Core = require('./core'),
+    types = require('./types');
 
 var Client = ({
     host,
@@ -15,8 +16,8 @@ var Client = ({
     client.auth = async ({ user, password }) => {
         await core.auth({ user, password });
         
-        var proto = await core.read({ types: [ 103 ] }),
-            welcome = await core.read({ types: [ 104 ] });
+        var proto = await core.read({ types: [ types.PROTOCOL ] }),
+            welcome = await core.read({ types: [ types.WELCOME ] });
 
         return ({ proto, welcome });
     };
@@ -25,10 +26,11 @@ var Client = ({
         await core.rcon(command);
 
         var lines = [],
-            packet = await core.read({ types: [ 120, 125 ] });
+            accepted = [ types.RCON_RESPONSE, types.RCON_END ],
+            packet = await core.read({ types: accepted });
         while (packet.type !== 125) {
             lines.push(packet.output);
-            packet = await core.read({ types: [ 120, 125] });
+            packet = await core.read({ types: accepted });
         }
         return lines;
     }

@@ -3,8 +3,7 @@ var net = require('net'),
     PromiseSocket = require('promise-socket').PromiseSocket,
     clientpackets = require('./clientpackets'),
     splitChunk = require('./split-chunk'),
-    decode = require('./decode'),
-    Logger = require('./logger');
+    decode = require('./decode');
 
 var Core = ({
     host,

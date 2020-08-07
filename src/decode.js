@@ -1,5 +1,6 @@
 'use strict';
 var binary = require('binary'),
+    types = require('./types'),
     zero = require('./zerobuf');
 
 module.exports = (packet) => {
@@ -29,7 +30,7 @@ module.exports = (packet) => {
 
 var payloadDecoders = {
     // server tells client whet protocol version to use
-    [103]: ({ decoder }) => {
+    [types.PROTOCOL]: ({ decoder }) => {
         (
             decoder
             .word8('protocol')
@@ -37,7 +38,7 @@ var payloadDecoders = {
     },
 
     // welcome message containing when admin joined server
-    [104]: ({ decoder }) => {
+    [types.WELCOME]: ({ decoder }) => {
         (
             decoder
             .scan('name', zero())
@@ -63,13 +64,14 @@ var payloadDecoders = {
     },
 
     // new game
+    // FIXME: anything to decode here?
     /*[105]: ({ decoder }) => (
         decoder
         
     ),*/
 
     // rcon response
-    [120]: ({ decoder }) => (
+    [types.RCON_RESPONSE]: ({ decoder }) => (
         decoder
         .word16le('color')
         .scan('output', zero())
@@ -79,7 +81,7 @@ var payloadDecoders = {
     ),
 
     // rcon response end
-    [125]: ({ decoder }) => (
+    [types.RCON_END]: ({ decoder }) => (
         decoder
         .scan('command', zero())
         .tap((fields) => {
