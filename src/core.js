@@ -46,12 +46,12 @@ var Core = ({
             var cache = [ ...queue ],
                 matchingIndex,
                 packet;
-
-            cache.forEach((packet, i) => {
-                if (types.includes(packet.type)) {
+            for (var i = 0; i < cache.length; i += 1) {
+                if (types.includes(cache[i].type)) {
                     matchingIndex = i;
+                    break;
                 }
-            });
+            };
 
             if (matchingIndex !== undefined) {
                 packet = queue[matchingIndex];
