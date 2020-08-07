@@ -39,15 +39,39 @@ var Core = ({
         return await socket.write(packet);
     }
 
-    core.read = async (count) => {
+    var pullNextPacketOfType = (types) => {
+        if (types === undefined) {
+            return queue.shift()
+        }
+        else {
+            var cache = [ ...queue ],
+                matchingIndex,
+                packet;
+
+            cache.forEach((packet, i) => {
+                if (types.includes(packet.type)) {
+                    matchingIndex = i;
+                }
+            });
+
+            if (matchingIndex !== undefined) {
+                packet = queue[matchingIndex];
+                queue.splice(matchingIndex, 1);
+            }
+
+            return packet || undefined;
+        }
+    }
+
+    core.read = async ({ count, types }) => {
         count = count || 1;
 
         var packets = [];
         for (var i = 0; i < count; i += 1) {
-            var packet = queue.shift();
+            var packet = pullNextPacketOfType(types);
             while (!packet) {
                 await socket.read();
-                packet = queue.shift();
+                packet = pullNextPacketOfType(types);
             }
             packets.push(packet);
         }

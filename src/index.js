@@ -14,17 +14,21 @@ var Client = ({
 
     client.auth = async ({ user, password }) => {
         await core.auth({ user, password });
-        return await core.read(2); // FIXME wait for welcome
+        
+        var proto = await core.read({ types: [ 103 ] }),
+            welcome = await core.read({ types: [ 104 ] });
+
+        return ({ proto, welcome });
     };
 
     client.rcon = async ({ command }) => {
         await core.rcon(command);
 
         var lines = [],
-            packet = await core.read();
+            packet = await core.read({ types: [ 120, 125 ] });
         while (packet.type !== 125) {
             lines.push(packet.output);
-            packet = await core.read();
+            packet = await core.read({ types: [ 120, 125] });
         }
         return lines;
     }
