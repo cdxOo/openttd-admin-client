@@ -16,11 +16,11 @@ var result = (async () => {
         user: 'AdminUser',
         password: 'supersecret'
     });
-    console.log(response);
+    //console.log(response);
 
     var lines;
 
-    lines = await client.rcon.content.update();
+    /*lines = await client.rcon.content.update();
     console.log(lines);
 
     lines = await client.rcon.content.state({ filter: 'universal' });
@@ -30,9 +30,9 @@ var result = (async () => {
     console.log(lines);
     
     lines = await client.rcon.content.download();
-    console.log(lines);
+    console.log(lines);*/
 
-    lines = await client.rcon.clients();
+    /*lines = await client.rcon.clients();
     console.log(lines);
     
     lines = await client.rcon.companies();
@@ -54,12 +54,21 @@ var result = (async () => {
     console.log(lines);
     
     lines = await client.rcon.status();
+    console.log(lines);*/
+
+    //lines = await client.rcon.startAi({ ai: 3 });
+    //console.log(lines);
+    
+    //lines = await client.rcon.newgame();
+    //console.log(lines);
+
+    //lines = await client.rcon.restart();
+    //console.log(lines);
+
+
+    lines = await client.rcon.save({ file: "./asdf.sav" });
     console.log(lines);
 
-    lines = await client.rcon.startAi({ ai: 3 });
-    console.log(lines);
-    //console.log(await client.read());
-    //console.log(client.queue());
 
 
 

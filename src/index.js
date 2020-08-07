@@ -9,6 +9,14 @@ var Client = ({
     var client = {},
         core = Core({ host, port });
 
+    var nextGameWelcomeOrFailure = async () => {
+        await core.read({ types: [ types.NEWGAME ] });
+        return (
+            await core.read({ types: [ types.WELCOME ] })
+        );
+        // TODO work on the failure part :D
+    }
+
     client.core = core;
     client.connect = core.connect;
     client.disconnect = core.disconnect;
@@ -26,8 +34,9 @@ var Client = ({
         await core.rcon(command);
 
         var lines = [],
-            accepted = [ types.RCON_RESPONSE, types.RCON_END ],
-            packet = await core.read({ types: accepted });
+            accepted = [ types.RCON_RESPONSE, types.RCON_END ];
+        
+        var packet = await core.read({ types: accepted });
         while (packet.type !== 125) {
             lines.push(packet.output);
             packet = await core.read({ types: accepted });
@@ -108,11 +117,14 @@ var Client = ({
         client.rcon({ command: 'list_patches' })
     );
     
-    client.rcon.load = ({ index, file }) => (
-        client.rcon({
+    client.rcon.load = async ({ index, file }) => {
+        await client.rcon({
             command: `load ${ file ? '"' + file + '"' : index }`
-        })
-    );
+        });
+        return (
+            await nextGameWelcomeOrFailure()
+        );
+    };
 
     client.rcon.ls = () => (
         client.rcon({ command: 'ls' })
@@ -123,9 +135,12 @@ var Client = ({
         client.rcon({ command: `move ${clientId} ${companyId}` })
     );
     
-    client.rcon.newgame = () => (
-        client.rcon({ command: 'newgame' })
-    );
+    client.rcon.newgame = async () => {
+        await client.rcon({ command: 'newgame' });
+        return (
+            await nextGameWelcomeOrFailure()
+        );
+    };
     
     client.rcon.patch = ({ patchname, newvalue }) => (
         client.rcon({ command: `patch "${patchname}" "${newvalue}"` })
@@ -145,9 +160,12 @@ var Client = ({
 
     // FIXME: resetengines???
     
-    client.rcon.restart = () => (
-        client.rcon({ command: 'restart' })
-    );
+    client.rcon.restart = async () => {
+        await client.rcon({ command: 'restart' });
+        return (
+            await nextGameWelcomeOrFailure()
+        );
+    };
 
     // stop executing arunning script
     client.rcon.return = () => (
