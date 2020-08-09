@@ -32,7 +32,7 @@ var result = (async () => {
     lines = await client.rcon.content.download();
     console.log(lines);*/
 
-    /*lines = await client.rcon.clients();
+    lines = await client.rcon.clients();
     console.log(lines);
     
     lines = await client.rcon.companies();
@@ -44,8 +44,6 @@ var result = (async () => {
     lines = await client.rcon.listPatches();
     console.log(lines);
     
-    lines = await client.rcon.dir();
-    console.log(lines);
 
     lines = await client.rcon.pwd();
     console.log(lines);
@@ -54,24 +52,36 @@ var result = (async () => {
     console.log(lines);
     
     lines = await client.rcon.status();
-    console.log(lines);*/
+    console.log(lines);
 
     //lines = await client.rcon.startAi({ ai: 3 });
     //console.log(lines);
     
-    //lines = await client.rcon.newgame();
-    //console.log(lines);
+    lines = await client.rcon.newgame();
+    console.log(lines);
 
     //lines = await client.rcon.restart();
     //console.log(lines);
 
 
-    lines = await client.rcon.save({ file: "./asdf.sav" });
+    /*lines = await client.rcon.save({ file: "asdf.sav" });
     console.log(lines);
 
+    lines = await client.rcon.dir();
+    console.log(lines);
+    
+    lines = await client.rcon.cd({ directory: "autosave"});
+    console.log(lines);
+
+    lines = await client.rcon.dir();
+    console.log(lines);
+
+    lines = await client.rcon.cd({ index: 0 });
+    console.log(lines);*/
 
 
-
+    lines = await client.rcon.clients();
+    console.log(lines);
 
 
 
