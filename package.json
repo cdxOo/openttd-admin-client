@@ -1,5 +1,5 @@
 {
-  "name": "cdxoo/openttd-admin-client",
+  "name": "@cdxoo/openttd-admin-client",
   "version": "0.1.0",
   "description": "client library to connect to openttd server admin interface",
   "main": "src/index.js",
